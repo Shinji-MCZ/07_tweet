@@ -8,7 +8,6 @@ $dbh = connectDb();
 $sql = "select * from tweets order by created_at desc";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
-
 $tweets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 //ツイート
@@ -18,18 +17,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // バリデーション
   if ($content == '') {
-    $errors['content'] = 'ツイート内容を入力してください。';
+  $errors['content'] = 'ツイート内容を入力してください。';
   }
-  
-  if (empty($errors)) {
-    $dbh = connectDb();
-    $sql = "insert into tweets (content, created_at) values (:content, now())";
-    $stmt = $dbh->prepare($sql);
-    $stmt->bindParam(":content", $content);
-    $stmt->execute();
 
-    header('Location: index.php');
-    exit;
+  if (empty($errors)) {
+  $sql = "insert into tweets (content, created_at) values (:content, now())";
+  $stmt = $dbh->prepare($sql);
+  $stmt->bindParam(":content", $content);
+  $stmt->execute();
+
+  header('Location: index.php');
+  exit;
   }
 }
 
@@ -47,26 +45,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <h1>新規Tweet</h1>
   <?php if ($errors) : ?>
     <ul class="error">
+      <?php foreach ($errors as $error) : ?>
       <li>
         <?php echo h($errors['content']); ?>
       </li>
+      <?php endforeach; ?>
     </ul>
   <?php endif; ?>
   <form action="" method="post">
     <p>
       <label for="content">ツイート内容</label><br>
         <textarea name="content" id="" cols="30" rows="5" placeholder="いまどうしてる？"></textarea><br>
-        <input type="button" value="投稿する">
+        <input type="submit" value="投稿する">
     </p>
   </form>
   <h2>Tweet一覧</h2><br>
   <?php if (count($tweets)) : ?>
     <ul class="tweet">
-      <?php foreach($tweets as $tweet) :?>
+      <?php foreach ($tweets as $tweet) : ?>
         <li>
-          <a href="show.php?id=<?php echo h($tweet['id']) ?>"><?php echo h('content'); ?></a><br>
+          <a href="show.php?id=<?php echo h($tweet['id']) ?>"><?php echo h($tweet['content']); ?></a><br>
             <span>投稿日時:<?php echo h($tweet['created_at']); ?></span>
-            <a href="good.php&id=1&good=false">☆</a>
+            <a href="good.php&id=1&good=false" class="good">☆</a>
           <hr>
         </li>
       <?php endforeach; ?>
@@ -74,6 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php else : ?>
       <p>投稿されたツイートはありません</p>
     <?php endif; ?>
-  
+
 </body>
 </html>
+
+
+
+

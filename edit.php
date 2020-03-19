@@ -9,36 +9,31 @@ $dbh = connectDb();
 
 $sql = "select * from tweets where id = :id";
 $stmt = $dbh->prepare($sql);
-$stmt->bindParam(":id", $id);
+$stmt->bindParam(":id", $id, PDO::PARAM_INT);
 $stmt->execute();
 
 $tweet = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$tweet) {
-  header('Location: index.php');
-  exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  
   $content = $_POST['content'];
-  $unchange = $_POST['unchange'];
+
   $errors = [];
 
   if ($content == '') {
-    $errors['content'] = '入力がされていません';
+    $errors['content'] = '入力がされてません。';
   }
 
-  //タイトルと本文が未編集の場合エラー文表示
+  //未編集の場合エラー文表示
   if ($content === $tweet['content']) {
-    $errors['unchanged'] = '内容が変更されていません';
+    $errors['content'] = '内容が変更されていません。';
   }
 
-  if (empty($errors)){
+  if (empty($errors)) {
+  $dbh = connectDb();
   $sql = "update tweets set content = :content, created_at = now() where id = :id";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindParam(":content", $content);
-  $stmt->bindParam(":id", $id);
+  $stmt->bindParam(":content", $content, PDO::PARAM_STR);
+  $stmt->bindParam(":id", $id, PDO::PARAM_INT);
   $stmt->execute();
   //index.phpに戻る
   header('Location: index.php');
@@ -53,31 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>tweetの編集画面</title>
+  <title>Tweetアプリ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>tweetの編集</h1>
-  <p>
-    <a href="index.php">戻る</a>
-  </p>
+  <p><a href="index.php">戻る</a></p>
   <?php if ($errors) : ?>
     <ul class="error">
       <?php foreach ($errors as $error) : ?>
         <li>
           <?php echo h($error); ?>
         </li>
-      <? endforeach; ?>
+      <?php endforeach; ?>
     </ul>
   <?php endif; ?>
   <form action="" method="post">
     <p>
-      <label for="content">ツイート内容</label><br>
-      <textarea name="content" id="" cols="30" rows="5"><?php echo h($post['content']); ?></textarea>
-    </p>
-    <p>
-      <input type="submit" value="編集する">
+      <label for="content">ツイート内容<br>
+        <textarea name="content" cols="30" rows="5" value=<?php echo h($tweet['content']); ?>></textarea>
+      </label>
+      <br>
+        <input type="submit" value="編集する">
     </p>
   </form>
 </body>
-</html>
+</html> 
