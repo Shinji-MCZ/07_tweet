@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <form action="" method="post">
     <p>
       <label for="content">ツイート内容<br>
-        <textarea name="content" cols="30" rows="5" value=<?php echo h($tweet['content']); ?>></textarea>
+        <textarea name="content" cols="30" rows="5"><?php echo h($tweet['content']); ?></textarea>
       </label>
       <br>
         <input type="submit" value="編集する">

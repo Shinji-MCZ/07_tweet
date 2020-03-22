@@ -37,9 +37,13 @@ if (!$tweet) {
         [#<?php echo h($tweet['id']) ?>]
         <?php echo h($tweet['content']); ?></a><br>
         <span>投稿日時:<?php echo h($tweet['created_at']); ?></span>
-        <a href="edit.php">編集</a>
-        <a href="delete.php">削除</a>
-        <a href="good.php&id=1&good=false" class="good">☆</a>
+        <a href="edit.php?id=<?php echo h($tweet['id']); ?>">[編集]</a>
+        <a href="delete.php?id=<?php echo h($tweet['id']); ?>">[削除]</a>
+        <?php if($tweet['good'] == 0) : ?>
+          <a href="good.php?id=<?php echo h($tweet['id']) . "&good=1"; ?>" class="good-link"><?php echo '☆'; ?></a>
+        <?php else : ?>
+          <a href="good.php?id=<?php echo h($tweet['id']) . "&good=0"; ?>" class="bad-link"><?php echo '★'; ?></a>
+        <?php endif; ?>
         <hr>
       </li>
     </ul>

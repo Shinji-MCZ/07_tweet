@@ -9,7 +9,10 @@
   list-style: none;
 }
 
-.good {
+.good-link {
   text-decoration: none;
 }
 
+.bad-link {
+  text-decoration: none;
+}
