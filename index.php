@@ -68,16 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <span>投稿日時:<?php echo h($tweet['created_at']); ?></span>
             <?php if($tweet['good'] == 0) : ?>
             <a href="good.php?id=<?php echo h($tweet['id']) . "&good=1"; ?>" class="good-link"><?php echo '☆'; ?></a>
-          <?php else : ?>
+            <?php else : ?>
             <a href="good.php?id=<?php echo h($tweet['id']) . "&good=0"; ?>" class="bad-link"><?php echo '★'; ?></a>
-          <?php endif; ?>
+            <?php endif; ?>
           <hr>
         </li>
       <?php endforeach; ?>
     </ul>
-    <?php else : ?>
-      <p>投稿されたツイートはありません</p>
-    <?php endif; ?>
+  <?php else : ?>
+    <p>投稿されたツイートはありません</p>
+  <?php endif; ?>
 
 </body>
 </html>
